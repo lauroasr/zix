@@ -31,10 +31,11 @@ abstract class Body {
       angularAcceleration = point.cross(force) / momentOfInertia;
     }
 
+    force.divideBy(mass);
     acceleration.addBy(force);
   }
 
-  AABB aabb({Vector2D angle});
+  AABB aabb({num angle});
   Vector2D farthestHullPoint(Vector2D direction);
   //Vector2D farthestCorePoint(Vector2D direction);
 }

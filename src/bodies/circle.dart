@@ -3,7 +3,7 @@ part of zix;
 class Circle extends Body {
   double radius;
 
-  AABB aabb({Vector2D angle}) {
+  AABB aabb({num angle}) {
     return new AABB(-radius, -radius, radius, radius);
   }
 

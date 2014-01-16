@@ -46,9 +46,14 @@ class Vector2D {
     y -= other.y;
   }
 
-  void multiplyBy(Vector2D other) {
-    x *= other.x;
-    y *= other.x;
+  void multiplyBy(num n) {
+    x *= n;
+    y *= n;
+  }
+  
+  void divideBy(num n) {
+    x /= n;
+    y /= n;
   }
 
   void negate() {
@@ -127,9 +132,20 @@ class Vector2D {
     set(x * c - y * s, x * s + y * c);
     addBy(t.rotationOrigin);
   }
-
+  
+  num projection(Vector2D other) {
+    return dot(other) / other.length();
+  }
+  
   num angle() {
-    return atan2(x, y);
+    return atan2(y, x);
+  }
+  
+  // possibly wrong
+  num angleBetween(Vector2D other) {
+    if (other.equals(Vector2D.ZERO)) return angle();
+    
+    return atan2(y * other.x - x * other.y, x * other.x + y * other.y);
   }
 
   num distanceTo(Vector2D other) {
