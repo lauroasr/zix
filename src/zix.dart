@@ -1,9 +1,9 @@
 library zix;
 
+// dart
 import 'dart:core';
 import 'dart:math';
-//import 'dart:html';
-import 'dart:async';
+import 'dart:html';
 
 // math
 part 'math/vector.dart';
@@ -13,28 +13,27 @@ part 'math/aabb.dart';
 
 // bodies
 part 'bodies/body.dart';
-part 'bodies/circle.dart';
-part 'bodies/convex-polygon.dart';
+part 'bodies/circle-body.dart';
+part 'bodies/convex-polygon-body.dart';
 
 // integrators
 part 'integrators/integrator.dart';
+part 'integrators/improved-euler-integrator.dart';
+part 'integrators/verlet-integrator.dart';
 
-/*
-Timer t = new Timer.periodic(new Duration(seconds: 5), (Timer t) {
-  print('5 seconds ${(new DateTime.now()).millisecondsSinceEpoch}');
-});
-*/
+// core
+part 'core/texture.dart';
+part 'core/sprite.dart';
+part 'core/interactivity.dart';
+part 'core/time.dart';
+
+// renderers
+part 'renderers/renderer.dart';
 
 class Zix {
 
 }
 
 void main() {
-  var a = new Vector2D(1, 0);
-  a.rotate(PI / 2);
-  print(a);
-  
-  a.set(1, 0);
-  a.rotateInverse(-PI / 2);
-  print(a);
+
 }

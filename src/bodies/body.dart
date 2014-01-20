@@ -1,30 +1,21 @@
 part of zix;
 
-abstract class Body {
+class Body extends Sprite {
   Vector2D position;
   Vector2D velocity;
   Vector2D acceleration;
 
-  double angle;
-  double angularSpeed;
-  double angularAcceleration;
+  num angle;
+  num angularSpeed;
+  num angularAcceleration;
 
   bool fixed;
-  bool hidden;
+  bool visible;
 
-  double mass;
-  double coefficientOfRestitution;
-  double coefficientOfFriction;
-  double momentOfInertia;
-
-  Body({this.position, this.velocity,
-        this.acceleration, this.angle,
-        this.angularSpeed, this.angularAcceleration,
-        this.fixed, this.hidden, this.mass,
-        this.coefficientOfRestitution,
-        this.coefficientOfFriction,
-        this.momentOfInertia
-  });
+  num mass;
+  num coefficientOfRestitution;
+  num coefficientOfFriction;
+  num momentOfInertia;
 
   void applyForce(Vector2D force, {Vector2D point}) {
     if (point != null) {
@@ -35,7 +26,19 @@ abstract class Body {
     acceleration.addBy(force);
   }
 
-  AABB aabb({num angle});
-  Vector2D farthestHullPoint(Vector2D direction);
-  //Vector2D farthestCorePoint(Vector2D direction);
+  Body();
+
+  Body.byOther(Body other) {
+    position = new Vector2D.byOther(other.position);
+    velocity = new Vector2D.byOther(other.velocity);
+    acceleration = new Vector2D.byOther(other.acceleration);
+    angle = other.angle;
+    angularSpeed = other.angularSpeed;
+    fixed = other.fixed;
+    visible = other.visible;
+    mass = other.mass;
+    coefficientOfRestitution = other.coefficientOfRestitution;
+    coefficientOfFriction = other.coefficientOfFriction;
+    momentOfInertia = other.momentOfInertia;
+  }
 }

@@ -1,6 +1,6 @@
 part of zix;
 
-class Circle extends Body {
+class CircleBody extends Body {
   double radius;
 
   AABB aabb({num angle}) {

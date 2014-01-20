@@ -18,7 +18,7 @@ class Vector2D {
     y = other.y;
   }
 
-  void setByOther(Vector2D other) {
+  void copy(Vector2D other) {
     x = other.x;
     y = other.y;
   }
@@ -50,7 +50,7 @@ class Vector2D {
     x *= n;
     y *= n;
   }
-  
+
   void divideBy(num n) {
     x /= n;
     y /= n;
@@ -103,14 +103,7 @@ class Vector2D {
     return x * x + y * y;
   }
 
-  num lengthSquaredTo(Vector2D other) {
-    num distanceX = x - other.x,
-        distanceY = y - other.y;
-
-    return distanceX * distanceX + distanceY * distanceY;
-  }
-
-  // can improve by taking out methods
+  // @optimize : methods
   void rotate(num angle, [Vector2D origin]) {
     num c = cos(angle);
     num s = sin(angle);
@@ -132,24 +125,31 @@ class Vector2D {
     set(x * c - y * s, x * s + y * c);
     addBy(t.rotationOrigin);
   }
-  
+
   num projection(Vector2D other) {
     return dot(other) / other.length();
   }
-  
+
   num angle() {
     return atan2(y, x);
   }
-  
+
   // possibly wrong
   num angleBetween(Vector2D other) {
     if (other.equals(Vector2D.ZERO)) return angle();
-    
+
     return atan2(y * other.x - x * other.y, x * other.x + y * other.y);
   }
 
   num distanceTo(Vector2D other) {
     return pathTo(other).length();
+  }
+
+  num distanceSquaredTo(Vector2D other) {
+    num distanceX = x - other.x,
+        distanceY = y - other.y;
+
+    return distanceX * distanceX + distanceY * distanceY;
   }
 
   bool equals(Vector2D other) {
