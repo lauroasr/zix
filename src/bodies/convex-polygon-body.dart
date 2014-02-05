@@ -46,13 +46,13 @@ class ConvexPolygonBody extends Body {
 
     return total / (6 * deno);
   }
-  
+
   static bool isPointInside(Vector2D point, List<Vector2D> hull) {
     if (hull.length == 1) return point.equals(hull.first);
     if (hull.length == 2) {
-      return PI == (point.angleBetween(hull.first) + point.angleBetween(hull.last)).abs();       
+      return PI == (point.angleBetween(hull.first) + point.angleBetween(hull.last)).abs();
     }
-    
+
     double angle = 0.0;
     Vector2D last = hull.first - point, current;
     for (int i = 1, hullLength = hull.length; i <= hullLength; i++) {
@@ -61,13 +61,13 @@ class ConvexPolygonBody extends Body {
       angle += current.angleBetween(last);
       last = current;
     }
-    
+
     return angle.abs() > 1e-6;
   }
-  
+
   static num areaOf(List<Vector2D> hull) {
     if (hull.length < 3) return 0;
-    
+
     num area = 0;
     Vector2D last = hull.last;
     for (int i = 0, hullLength = hull.length; i < hullLength; i++) {
@@ -77,76 +77,90 @@ class ConvexPolygonBody extends Body {
     area /= 2;
     return area;
   }
-  
+
   static Vector2D centroidOf(List<Vector2D> hull) {
     if (hull.length == 1) return hull.first;
-    
+
     if (hull.length == 2) {
       Vector2D center = hull.first + hull.last;
       center.divideBy(2);
       return center;
     }
-    
+
     Vector2D last = new Vector2D.byOther(hull.last), cent = new Vector2D();
     for (int i = 0, hullLength = hull.length; i < hullLength; ++i) {
       num cross = last.cross(hull[i]);
       last.addBy(hull[i]);
       last.multiplyBy(cross);
-      
+
       cent.addBy(last);
       last = hull[i];
     }
     cent.divideBy(6 * areaOf(hull));
     return cent;
   }
-  
+
   void setVertices(List<Vector2D> hull) {
     if (!isConvex(hull))
       throw new ArgumentError('hull needs to be convex.');
-    
+
     Vector2D polygonCentroid = centroidOf(hull);
     polygonCentroid.negate();
-    
+
     for (int i = 0, hullLength = hull.length; i < hullLength; i++) {
       vertices.add(hull[i] + polygonCentroid);
     }
   }
-  
-  Vector2D farthestHullPoint(Vector2D direction) {
+
+  Vector2D farthestHullPoint(Vector2D direction/*, Map data*/) {
     int vertsLength = vertices.length;
-    
+
     if (vertsLength == 1) return vertices.first;
-    
+
     num prev = vertices[0].dot(direction),
         curr = vertices[1].dot(direction);
-        
+
     if (vertsLength == 2) {
-      if (curr < prev) 
+      if (curr < prev)
         return vertices.first;
       return vertices.last;
     }
-    
+
     if (curr >= prev) {
       int i;
       for (i = 2; i < vertsLength && curr >= prev; i++) {
         prev = curr;
         curr = vertices[i].dot(direction);
       }
-      
-      if (curr >= prev) i++;      
+
+      if (curr >= prev) i++;
       return vertices[i - 2];
     }
-    
+
     int i;
     for (i = vertsLength - 1; i > 1 && prev >= curr; i--) {
       curr = prev;
       prev = vertices[i].dot(direction);
     }
-    
+
     return vertices[(i + 1) % vertsLength];
   }
-  
-  // can optimize! (instances)
+
+  Vector2D farthestCorePoint(Vector2D direction, num margin) {
+    Vector2D point = farthestHullPoint(direction);
+    // @alert : modified! maybe use data.index instead
+    num pointIndex = vertices.indexOf(point);
+    // @optimize : instance
+    Vector2D next = (vertices[(pointIndex + 1) % vertices.length] - point).normalized().perpendicular(clockwise: false),
+             last = (vertices[(pointIndex - 1 + vertices.length) % vertices.length] - point).normalized().perpendicular(clockwise: true);
+
+    num length = margin / (1 + next.dot(last));
+    // @optimize : instance
+    point.addBy((next + last) * length);
+    return point;
+  }
+
+  // @optimize : instance
   AABB aabb({num angle: 0}) {
     Vector2D xAxis = new Vector2D.byAngle(-angle),
              yAxis = new Vector2D.byAngle(-(angle + PI / 2));
@@ -154,9 +168,7 @@ class ConvexPolygonBody extends Body {
         minX = farthestHullPoint(xAxis.negative()).projection(xAxis),
         maxY = farthestHullPoint(yAxis).projection(yAxis),
         minY = farthestHullPoint(yAxis.negative()).projection(yAxis);
-    
+
     return new AABB(minX, minY, maxX, maxY);
   }
-  
-  
 }

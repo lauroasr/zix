@@ -88,7 +88,7 @@ class Vector2D {
     return new Vector2D(-x, -y);
   }
 
-  Vector2D perpendicular([bool clockwise = true]) {
+  Vector2D perpendicular({bool clockwise: true}) {
     if (clockwise) {
       return new Vector2D(-y, x);
     }
@@ -104,7 +104,7 @@ class Vector2D {
   }
 
   // @optimize : methods
-  void rotate(num angle, [Vector2D origin]) {
+  void rotate(num angle, {Vector2D origin}) {
     num c = cos(angle);
     num s = sin(angle);
 
@@ -118,12 +118,32 @@ class Vector2D {
   }
 
   void rotateByTransform(Transform t) {
-    num c = t.angleCos;
-    num s = t.angleSin;
+    num c = t.angleCos,
+        s = t.angleSin;
 
     subtractBy(t.rotationOrigin);
     set(x * c - y * s, x * s + y * c);
     addBy(t.rotationOrigin);
+  }
+
+  void rotateInverseByTransform(Transform t) {
+    num c = t.angleCos,
+        s = t.angleSin;
+
+    subtractBy(t.rotationOrigin);
+    set(x * c + y * s, -x * s + y * c);
+    addBy(t.rotationOrigin);
+  }
+
+  void applyTransform(Transform t) {
+    num s = t.angleCos,
+        c = t.angleSin;
+
+    // @optimize : methods
+    subtractBy(t.rotationOrigin);
+    set(x * c - y * s, x * s + y * c);
+    addBy(t.rotationOrigin);
+    addBy(t.translation);
   }
 
   num projection(Vector2D other) {

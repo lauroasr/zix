@@ -18,7 +18,7 @@ class GJK {
     } else {
       Vector2D direction = pointB - pointA;
       bool clockwise = pointA.cross(direction) < 0;
-      return direction.perpendicular(clockwise);
+      return direction.perpendicular(clockwise: clockwise);
     }
   }
 
@@ -64,7 +64,7 @@ class GJK {
   /**
    * Implementation agnostic GJK function
    */
-  static Map gjk(Map support(Vector2D d), Vector2D seed, [bool checkOverlapOnly = false, Function debug]) {
+  static Map gjk(Map support(Vector2D d), Vector2D seed, {bool checkOverlapOnly: false, Function debug}) {
     Vector2D direction = seed;
     if (direction == null) {
       direction = new Vector2D(1, 0);
@@ -85,7 +85,7 @@ class GJK {
       simplex.add(minkDifference);
       current = minkDifference['pt'];
 
-      // make take it out
+      // may take it out
       if (debug != null) {
         debug(simplex);
       }
@@ -126,11 +126,11 @@ class GJK {
         if (sign != (current.cross(ab) > 0)) {
           simplex.removeAt(0);
 
-          direction = ab.perpendicular(sign);
+          direction = ab.perpendicular(clockwise: sign);
         } else if (sign != (ac.cross(current) > 0)) {
           simplex.removeAt(1);
 
-          direction = ac.perpendicular(!sign);
+          direction = ac.perpendicular(clockwise: !sign);
         } else {
           overlap = true;
           break;

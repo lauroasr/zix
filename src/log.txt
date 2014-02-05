@@ -1,20 +1,18 @@
-# Bug
-  - When he swap objects, he's actually using the swapped
-  references as well. If I, to eliminate swap, just attribute B
-  to A, and then instead of creating another object to B, just use
-  the same instance as before (to avoid instantiating another object),
-  both A and B would hold the same object. 
-  
-# To implement
-  - Time events. Once created, it is going to execute the callback
-  function once every timeout.
-  
-  - Events (by input or not). So anything can be manipulated with
-  events thrown.
-  
-  - A simple sprite that the world is going to control. A sprite can be
-  a simple object or an advanced body that has all the properties specified
-  in the bodies package, and can has physics to act on it.
-  
-  - Renderes. I will need to focus a lot of time here. Maybe implement
-  WebGL as well, but I need to study that...
+
+
+@redesign
+  Behavior
+  BodyCollisionDetectionBehavior
+
+
+
+@events
+  collisions:detected = body-collisions
+  collisions:candidates = collisions-candidates
+
+
+
+# Events needs a completely redesign. It will be better if every event were
+a method and not a function. And in order to have an especifically event you
+would need to implement an Interface that specifies this method. This would
+make the code a lot more consistent.

@@ -41,4 +41,8 @@ class Body extends Sprite {
     coefficientOfFriction = other.coefficientOfFriction;
     momentOfInertia = other.momentOfInertia;
   }
+
+  Vector2D farthestHullPoint(Vector2D direction) => null;
+  Vector2D farthestCorePoint(Vector2D direction, num margin) => null;
+  AABB aabb({num angle}) => null;
 }
